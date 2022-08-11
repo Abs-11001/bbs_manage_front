@@ -20,7 +20,22 @@ import {
     Col,
     Card,
     Table,
-    TableColumn
+    TableColumn,
+    Breadcrumb,
+    BreadcrumbItem,
+    Tag,
+    Form,
+    FormItem,
+    Input,
+    Switch,
+    Select,
+    Option,
+    DatePicker,
+    TimePicker,
+    Dialog,
+    Message,
+    MessageBox,
+    Pagination
 } from "element-ui";
 import App from './App.vue'
 import router from './router'
@@ -48,11 +63,27 @@ Vue.use(Col)
 Vue.use(Card)
 Vue.use(Table)
 Vue.use(TableColumn)
+Vue.use(Breadcrumb)
+Vue.use(BreadcrumbItem)
+Vue.use(Tag)
+Vue.use(Form)
+Vue.use(FormItem)
+Vue.use(Input)
+Vue.use(Switch)
+Vue.use(Select)
+Vue.use(Option)
+Vue.use(DatePicker)
+Vue.use(TimePicker)
+Vue.use(Dialog)
+Vue.use(Pagination)
+
+Vue.prototype.$confirm = MessageBox.confirm
+Vue.prototype.$message = Message
 
 Vue.config.productionTip = false
 
 new Vue({
     render: h => h(App),
     router,
-    store
+    store,
 }).$mount('#app')

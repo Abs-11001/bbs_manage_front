@@ -1,6 +1,6 @@
 <template>
   <el-menu
-      default-active="1-4-1"
+      :default-active="$route.path"
       class="el-menu-vertical-demo"
       background-color="#545c64"
       text-color="#fff"
@@ -9,7 +9,11 @@
       @close="handleClose"
       :collapse="isCollapse">
     <h3>{{isCollapse ? '后台' : '通用后台管理'}}</h3>
-    <el-menu-item v-for="item in menuNoChildren" :index="item.path" :key="item.path" @click="handleMenuClick(item)">
+    <el-menu-item
+        v-for="item in menuNoChildren"
+        :index="item.path"
+        :key="item.path"
+        @click="handleMenuClick(item)">
       <i :class="'el-icon-' + item.icon"></i>
       <span slot="title">{{item.label}}</span>
     </el-menu-item>
@@ -20,7 +24,11 @@
         <span slot="title">{{item.label}}</span>
       </template>
       <el-menu-item-group v-for="subItem in item.children" :index="subItem.path" :key="subItem.path">
-        <el-menu-item :index="subItem.path">{{subItem.label}}</el-menu-item>
+        <el-menu-item
+            :index="subItem.path"
+            @click="handleMenuClick(subItem)">
+          {{subItem.label}}
+        </el-menu-item>
       </el-menu-item-group>
     </el-submenu>
   </el-menu>
@@ -34,15 +42,15 @@ export default {
     return {
       menu: [
         {
-          path: '/',
+          path: '/home',
           name: 'home',
           label: '首页',
           icon: 's-home',
           url: 'Home/Home'
         },
         {
-          path: '/mail',
-          name: 'mail',
+          path: '/mall',
+          name: 'mall',
           label: '商品管理',
           icon: 'video-play',
           url: 'MallManage/MallManage'
@@ -85,10 +93,14 @@ export default {
       console.log(key, keyPath);
     },
     handleMenuClick(item){
+      // 如果当前url和要跳转的url一致就阻止行为
+      if (this.$route.path === item.path) return
       this.$router.push({
         name: item.name
       })
-    }
+      const breadcrumb = {name: item.label, path: item.path}
+      this.$store.commit('headerAbout/addBreadCrumb', breadcrumb)
+    },
   },
   computed: {
     menuNoChildren(){

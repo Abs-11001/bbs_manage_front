@@ -2,7 +2,15 @@
   <header>
     <div class="header-left">
       <el-button icon="el-icon-menu" size="mini" @click="handleCollapseToggle"></el-button>
-      <h3>首页</h3>
+      <el-breadcrumb>
+        <el-breadcrumb-item
+            v-for="item in breadcrumb"
+            :to="{path: item.path}"
+            :key="item.path"
+            :class="getUrl(item)">
+          {{ item.name }}
+        </el-breadcrumb-item>
+      </el-breadcrumb>
     </div>
     <div class="header-right">
       <el-dropdown>
@@ -19,16 +27,51 @@
 </template>
 
 <script>
-import {mapMutations} from 'vuex'
+import {mapMutations, mapState} from 'vuex'
 export default {
   name: "CommonHeader",
   data(){
     return {
-      userImg: require('../assets/images/user.png')
+      userImg: require('../assets/images/user.png'),
     }
   },
+  computed: {
+    ...mapState('headerAbout', ['breadcrumb']),
+  },
   methods: {
-    ...mapMutations('asideAbout', {handleCollapseToggle: 'Toggle_Menu_Collapse'})
+    ...mapMutations('asideAbout', {handleCollapseToggle: 'Toggle_Menu_Collapse'}),
+    getUrl (item) {
+      return this.$route.path === item.path ? 'current' : ''
+    }
+  },
+  mounted(){
+    // 防止用户如果在非首页的地方刷新后，界面显示和面包屑、tag栏不对应
+    const currentUrl = this.$route.path
+    let breadcrumb = {}
+    switch (currentUrl){
+      case '/':
+      case '/home':
+        breadcrumb.path = '/home'
+        breadcrumb.name = '首页'
+        break
+      case '/user':
+        breadcrumb.path = '/user'
+        breadcrumb.name = '用户管理'
+        break
+      case '/mall':
+        breadcrumb.path = '/mall'
+        breadcrumb.name = '商品管理'
+        break
+      case '/page1':
+        breadcrumb.path = '/page1'
+        breadcrumb.name = '页面1'
+        break
+      case '/page2':
+        breadcrumb.path = '/page2'
+        breadcrumb.name = '页面2'
+        break
+    }
+    this.$store.commit('headerAbout/addBreadCrumb', breadcrumb)
   }
 }
 </script>
@@ -50,5 +93,11 @@ export default {
   .header-right img{
       width: 36px;
       border-radius: 50%;
+  }
+  ::v-deep .el-breadcrumb__inner.is-link{
+    color: #606266;
+  }
+  ::v-deep .current .el-breadcrumb__inner.is-link{
+    color: #fff;
   }
 </style>

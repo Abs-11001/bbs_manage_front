@@ -37,14 +37,14 @@
         </el-card>
       </div>
       <el-card shadow="hover" class="line-chart-container" body-style="height: 100%">
-        <div ref="lineChart" class="lineChart"></div>
+        <ECharts class="lineChart" :chart-data="lineChartData" :is-axis="true"/>
       </el-card>
       <div class="graph">
         <el-card shadow="hover"  body-style="height: 100%">
-          <div class="userBar"  ref="userBar"></div>
+          <ECharts :chart-data="barChartData" :is-axis="true"/>
         </el-card >
         <el-card shadow="hover"  body-style="height: 100%">
-          <div class="videoPie" ref="videoPie"></div>
+          <ECharts :is-axis="false" :chart-data="pieChartData" />
         </el-card>
       </div>
     </el-col>
@@ -53,11 +53,14 @@
 
 <script>
 import {getData} from "@/api/data";
-import * as echarts from 'echarts';
+import ECharts from '../../components/ECharts'
 
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Home",
+  components: {
+    ECharts
+  },
   data(){
     return {
       userImg: require('../../assets/images/user.png'),
@@ -106,6 +109,19 @@ export default {
           color: "#5ab1ef",
         },
       ],
+      lineChartData: {
+        series: [],
+        xData: [],
+        legend: []
+      },
+      barChartData: {
+        series: [],
+        xData: [],
+        legend: []
+      },
+      pieChartData: {
+        series: []
+      }
     }
   },
   mounted(){
@@ -115,6 +131,7 @@ export default {
           // 绘制屏幕左下方的数据
           this.tableData = data.tableData
 
+          // 获取折线图数据
           const orderData = data.orderData
           const orderDataKey = Object.keys(orderData.data[0])
           const series = []
@@ -125,72 +142,37 @@ export default {
               name: key
             })
           })
-          const lineChartOptions = {
-            xAxis: {
-              data: orderData.date
-            },
-            yAxis: {},
-            series,
-            legend: {
-              data: orderDataKey
-            },
-            tooltip: {
-              trigger: 'axis'
-            },
-            dataZoom: [
-              {
-                type: 'slider',
-                start: 50,
-                end: 100
-              },
-              {
-                start: 50,
-                end: 100
-              }
-            ],
-          }
-          const lineCharts = echarts.init(this.$refs.lineChart)
-          lineCharts.setOption(lineChartOptions)
+          this.lineChartData.series = series
+          this.lineChartData.xData = orderData.date
+          this.lineChartData.legend = orderDataKey
 
+          // 获取柱状图数据
           const userData = data.userData
-          const userBarOptions = {
-            xAxis: {
-              data: userData.map(item => item['date'])
+          const barChartSeries = [
+            {
+              name: '新增用户',
+              type: 'bar',
+              data: userData.map(item => item['new'])
             },
-            yAxis: {},
-            series: [
-              {
-                name: '新增用户',
-                type: 'bar',
-                data: userData.map(item => item['new'])
-              },
-              {
-                name: '活跃用户',
-                type: 'bar',
-                data: userData.map(item => item['active'])
-              }
-            ],
-            legend: {
-              data: ['新增用户', '活跃用户']
+            {
+              name: '活跃用户',
+              type: 'bar',
+              data: userData.map(item => item['active'])
             }
-          }
-          const userBarCharts = echarts.init(this.$refs.userBar)
-          userBarCharts.setOption(userBarOptions)
+          ]
+          this.barChartData.xData = userData.map(item => item['date'])
+          this.barChartData.series = barChartSeries
+          this.barChartData.legend = ['新增用户', '活跃用户']
 
+          // 获取饼图数据
           const videoData = data.videoData
-          const videoPieOptions = {
-            tooltip: {
-              trigger: 'item'
-            },
-            series: [
-              {
-                type: 'pie',
-                data: videoData
-              }
-            ]
-          }
-          const videoPieCharts = echarts.init(this.$refs.videoPie)
-          videoPieCharts.setOption(videoPieOptions)
+          const pieChartSeries = [
+            {
+              type: 'pie',
+              data: videoData
+            }
+          ]
+          this.pieChartData.series = pieChartSeries
         }
       })
   }

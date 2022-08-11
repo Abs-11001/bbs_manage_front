@@ -7,6 +7,7 @@
       <el-header>
         <CommonHeader/>
       </el-header>
+      <CommonTags/>
       <el-main>
         <router-view></router-view>
       </el-main>
@@ -17,12 +18,14 @@
 <script>
 import CommonAside from "@/components/CommonAside";
 import CommonHeader from "@/components/CommonHeader";
+import CommonTags from "@/components/CommonTags";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Main",
   components: {
     CommonAside,
-    CommonHeader
+    CommonHeader,
+    CommonTags
   }
 }
 </script>
