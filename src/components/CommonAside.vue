@@ -1,90 +1,89 @@
 <template>
+<!--  <el-menu-->
+<!--      :default-active="$route.path"-->
+<!--      class="el-menu-vertical-demo"-->
+<!--      background-color="#545c64"-->
+<!--      text-color="#fff"-->
+<!--      active-text-color="#ffd04d"-->
+<!--      @open="handleOpen"-->
+<!--      @close="handleClose"-->
+<!--      :collapse="isCollapse">-->
+<!--    <h3>{{isCollapse ? '后台' : '校园论坛管理系统'}}</h3>-->
+<!--    <el-menu-item-->
+<!--        v-for="item in menuNoChildren"-->
+<!--        :index="item.path"-->
+<!--        :key="item.path"-->
+<!--        @click="handleMenuClick(item)">-->
+<!--      <i :class="'el-icon-' + item.icon"></i>-->
+<!--      <span slot="title">{{item.label}}</span>-->
+<!--    </el-menu-item>-->
+
+<!--    <el-submenu v-for="(item,index) in menuHasChildren" :index="index.toString()" :key="index">-->
+<!--      <template slot="title">-->
+<!--        <i :class="'el-icon-' + item.icon"></i>-->
+<!--        <span slot="title">{{item.label}}</span>-->
+<!--      </template>-->
+<!--      <el-menu-item-group v-for="subItem in item.children" :index="subItem.path" :key="subItem.path">-->
+<!--        <el-menu-item-->
+<!--            :index="subItem.path"-->
+<!--            @click="handleMenuClick(subItem)">-->
+<!--          {{subItem.label}}-->
+<!--        </el-menu-item>-->
+<!--      </el-menu-item-group>-->
+<!--    </el-submenu>-->
+
+<!--  </el-menu>-->
+
   <el-menu
-      :default-active="$route.path"
+      default-active="1"
+      :default-openeds="['1', '2']"
       class="el-menu-vertical-demo"
       background-color="#545c64"
       text-color="#fff"
       active-text-color="#ffd04d"
+      router
       @open="handleOpen"
       @close="handleClose"
       :collapse="isCollapse">
-    <h3>{{isCollapse ? '后台' : '通用后台管理'}}</h3>
-    <el-menu-item
-        v-for="item in menuNoChildren"
-        :index="item.path"
-        :key="item.path"
-        @click="handleMenuClick(item)">
-      <i :class="'el-icon-' + item.icon"></i>
-      <span slot="title">{{item.label}}</span>
+    <h3>{{isCollapse ? '后台' : '校园论坛管理系统'}}</h3>
+    <el-menu-item index="/home">
+      <i class="el-icon-s-data"></i>
+      <span slot="title">数据驾驶舱</span>
     </el-menu-item>
-
-    <el-submenu v-for="(item,index) in menuHasChildren" :index="index.toString()" :key="index">
+    <el-menu-item index="/user">
+      <i class="el-icon-user-solid"></i>
+      <span slot="title">用户管理</span>
+    </el-menu-item>
+    <el-submenu index="1">
       <template slot="title">
-        <i :class="'el-icon-' + item.icon"></i>
-        <span slot="title">{{item.label}}</span>
+        <i class="el-icon-s-grid"></i>
+        <span>通知公告</span>
       </template>
-      <el-menu-item-group v-for="subItem in item.children" :index="subItem.path" :key="subItem.path">
-        <el-menu-item
-            :index="subItem.path"
-            @click="handleMenuClick(subItem)">
-          {{subItem.label}}
-        </el-menu-item>
+      <el-menu-item-group>
+        <el-menu-item index="/announcement/plateManagement">板块管理</el-menu-item>
+        <el-menu-item index="/announcement/announcementManagement">公告管理</el-menu-item>
       </el-menu-item-group>
     </el-submenu>
+    <el-submenu index="2">
+      <template slot="title">
+        <i class="el-icon-document-copy"></i>
+        <span>文章管理</span>
+      </template>
+      <el-menu-item-group>
+        <el-menu-item index="/article/informationShare">信息共享</el-menu-item>
+        <el-menu-item index="/article/helpEachOther">互帮互助</el-menu-item>
+        <el-menu-item index="/article/treeHole">暨阳树洞</el-menu-item>
+      </el-menu-item-group>
+    </el-submenu>
+
   </el-menu>
+
 </template>
 
 <script>
 import {mapState} from "vuex";
 export default {
   name: "CommonAside",
-  data() {
-    return {
-      menu: [
-        {
-          path: '/home',
-          name: 'home',
-          label: '首页',
-          icon: 's-home',
-          url: 'Home/Home'
-        },
-        {
-          path: '/mall',
-          name: 'mall',
-          label: '商品管理',
-          icon: 'video-play',
-          url: 'MallManage/MallManage'
-        },
-        {
-          path: '/user',
-          name: 'user',
-          label: '用户管理',
-          icon: 'user',
-          url: 'UserManage/UserManage'
-        },
-        {
-          label: '其他',
-          icon: 'location',
-          children: [
-            {
-              path: '/page1',
-              name: 'page1',
-              label: '页面1',
-              icon: 'setting',
-              url: 'Other/PageOne'
-            },
-            {
-              path: '/page2',
-              name: 'page2',
-              label: '页面2',
-              icon: 'setting',
-              url: 'Other/PageTwo'
-            }
-          ]
-        },
-      ]
-    };
-  },
   methods: {
     handleOpen(key, keyPath) {
       console.log(key, keyPath);
@@ -98,11 +97,12 @@ export default {
       this.$router.push({
         name: item.name
       })
-      const breadcrumb = {name: item.label, path: item.path}
+      const breadcrumb = {name: item.label, path: '/' + item.path}
       this.$store.commit('headerAbout/addBreadCrumb', breadcrumb)
     },
   },
   computed: {
+    ...mapState('asideAbout', ['isCollapse', 'menu']),
     menuNoChildren(){
       return this.menu.filter((item) => {
           return !item.children
@@ -113,7 +113,7 @@ export default {
         return item.children
       })
     },
-    ...mapState('asideAbout', ['isCollapse'])
+
   }
 }
 </script>

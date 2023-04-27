@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import {getData} from "@/api/data";
+// import {getData} from "@/api/data";
 import ECharts from '../../components/ECharts'
 
 export default {
@@ -125,56 +125,56 @@ export default {
     }
   },
   mounted(){
-      getData().then( res => {
-        const {code, data} = res.data
-        if (code === 20000){
-          // 绘制屏幕左下方的数据
-          this.tableData = data.tableData
-
-          // 获取折线图数据
-          const orderData = data.orderData
-          const orderDataKey = Object.keys(orderData.data[0])
-          const series = []
-          orderDataKey.forEach(key => {
-            series.push({
-              data: orderData.data.map(item => item[key]),
-              type: 'line',
-              name: key
-            })
-          })
-          this.lineChartData.series = series
-          this.lineChartData.xData = orderData.date
-          this.lineChartData.legend = orderDataKey
-
-          // 获取柱状图数据
-          const userData = data.userData
-          const barChartSeries = [
-            {
-              name: '新增用户',
-              type: 'bar',
-              data: userData.map(item => item['new'])
-            },
-            {
-              name: '活跃用户',
-              type: 'bar',
-              data: userData.map(item => item['active'])
-            }
-          ]
-          this.barChartData.xData = userData.map(item => item['date'])
-          this.barChartData.series = barChartSeries
-          this.barChartData.legend = ['新增用户', '活跃用户']
-
-          // 获取饼图数据
-          const videoData = data.videoData
-          const pieChartSeries = [
-            {
-              type: 'pie',
-              data: videoData
-            }
-          ]
-          this.pieChartData.series = pieChartSeries
-        }
-      })
+      // getData().then( res => {
+      //   const {code, data} = res.data
+      //   if (code === 20000){
+      //     // 绘制屏幕左下方的数据
+      //     this.tableData = data.tableData
+      //
+      //     // 获取折线图数据
+      //     const orderData = data.orderData
+      //     const orderDataKey = Object.keys(orderData.data[0])
+      //     const series = []
+      //     orderDataKey.forEach(key => {
+      //       series.push({
+      //         data: orderData.data.map(item => item[key]),
+      //         type: 'line',
+      //         name: key
+      //       })
+      //     })
+      //     this.lineChartData.series = series
+      //     this.lineChartData.xData = orderData.date
+      //     this.lineChartData.legend = orderDataKey
+      //
+      //     // 获取柱状图数据
+      //     const userData = data.userData
+      //     const barChartSeries = [
+      //       {
+      //         name: '新增用户',
+      //         type: 'bar',
+      //         data: userData.map(item => item['new'])
+      //       },
+      //       {
+      //         name: '活跃用户',
+      //         type: 'bar',
+      //         data: userData.map(item => item['active'])
+      //       }
+      //     ]
+      //     this.barChartData.xData = userData.map(item => item['date'])
+      //     this.barChartData.series = barChartSeries
+      //     this.barChartData.legend = ['新增用户', '活跃用户']
+      //
+      //     // 获取饼图数据
+      //     const videoData = data.videoData
+      //     const pieChartSeries = [
+      //       {
+      //         type: 'pie',
+      //         data: videoData
+      //       }
+      //     ]
+      //     this.pieChartData.series = pieChartSeries
+      //   }
+      // })
   }
 }
 </script>

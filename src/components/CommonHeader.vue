@@ -13,13 +13,13 @@
       </el-breadcrumb>
     </div>
     <div class="header-right">
-      <el-dropdown>
+      <el-dropdown @command="handleDropDownItemClick">
         <span>
           <img :src="userImg" alt="用户头像">
         </span>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>用户中心</el-dropdown-item>
-          <el-dropdown-item>退出</el-dropdown-item>
+          <el-dropdown-item command="logout">退出</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
@@ -42,11 +42,21 @@ export default {
     ...mapMutations('asideAbout', {handleCollapseToggle: 'Toggle_Menu_Collapse'}),
     getUrl (item) {
       return this.$route.path === item.path ? 'current' : ''
+    },
+    handleDropDownItemClick (command) {
+      console.log(command)
+      if (command === 'logout') {
+        this.$store.commit('loginAbout/clearCookie')
+        this.$store.commit('headerAbout/clearBreadCrumb')
+        this.$store.commit('asideAbout/clearMenu')
+        this.$router.push({name: 'login'})
+      }
     }
   },
   mounted(){
     // 防止用户如果在非首页的地方刷新后，界面显示和面包屑、tag栏不对应
     const currentUrl = this.$route.path
+    console.log('主动添加', currentUrl)
     let breadcrumb = {}
     switch (currentUrl){
       case '/':
