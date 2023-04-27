@@ -35,7 +35,7 @@ import {
     Dialog,
     Message,
     MessageBox,
-    Notification,
+    // Notification,
     Checkbox,
     Pagination,
     Link,
@@ -81,7 +81,7 @@ Vue.use(DatePicker)
 Vue.use(TimePicker)
 Vue.use(Dialog)
 Vue.use(Pagination)
-Vue.use(Notification)
+// Vue.use(Notification)
 Vue.use(Checkbox)
 Vue.use(Link)
 Vue.use(Loading)
