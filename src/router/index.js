@@ -63,6 +63,18 @@ const router = new VueRouter({
                         },
                     ]
                 },
+                {
+                    name: 'carousel',
+                    path: 'carousel',
+                    component: () => import("@/pages/carousel/index.vue"),
+                    children: [
+                        {
+                            name: 'imgCarousel',
+                            path: 'imgCarousel',
+                            component: () => import("@/pages/carousel/imgCarousel/index.vue")
+                        }
+                    ]
+                }
             ]
         },
         {

@@ -167,7 +167,6 @@
 </template>
 
 <script>
-import CommonForm from "@/components/CommonForm";
 import {getAllUserInformation, updateUserInformation, userRegister} from "@/api/user";
 import md5 from 'js-md5';
 
@@ -175,9 +174,6 @@ import md5 from 'js-md5';
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "User",
-  components: {
-    CommonForm
-  },
   data () {
     return {
       fullscreenLoading: true,

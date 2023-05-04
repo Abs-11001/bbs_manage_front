@@ -57,6 +57,16 @@
     <el-submenu index="1">
       <template slot="title">
         <i class="el-icon-s-grid"></i>
+        <span>轮播管理</span>
+      </template>
+      <el-menu-item-group>
+        <el-menu-item index="/carousel/imgCarousel">图片轮播管理</el-menu-item>
+        <el-menu-item index="/carousel/imgCarousel">公告管理</el-menu-item>
+      </el-menu-item-group>
+    </el-submenu>
+    <el-submenu index="2">
+      <template slot="title">
+        <i class="el-icon-s-grid"></i>
         <span>通知公告</span>
       </template>
       <el-menu-item-group>
@@ -64,7 +74,7 @@
         <el-menu-item index="/announcement/announcementManagement">公告管理</el-menu-item>
       </el-menu-item-group>
     </el-submenu>
-    <el-submenu index="2">
+    <el-submenu index="3">
       <template slot="title">
         <i class="el-icon-document-copy"></i>
         <span>文章管理</span>
