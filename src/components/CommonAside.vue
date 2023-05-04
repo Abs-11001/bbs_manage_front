@@ -61,7 +61,7 @@
       </template>
       <el-menu-item-group>
         <el-menu-item index="/carousel/imgCarousel">图片轮播管理</el-menu-item>
-        <el-menu-item index="/carousel/imgCarousel">公告管理</el-menu-item>
+        <el-menu-item index="/carousel/textCarousel">文字轮播图管理</el-menu-item>
       </el-menu-item-group>
     </el-submenu>
     <el-submenu index="2">

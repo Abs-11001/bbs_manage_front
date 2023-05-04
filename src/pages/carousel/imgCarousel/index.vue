@@ -28,6 +28,9 @@
               style="height: 150px"
               :src="`http://file.upload.waheng.fun/${scope.row.img}`"
               :preview-src-list="[`http://file.upload.waheng.fun/${scope.row.img}`]">
+            <div slot="placeholder" class="image-slot">
+              加载中<span class="dot">...</span>
+            </div>
           </el-image>
         </template>
       </el-table-column>

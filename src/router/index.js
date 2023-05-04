@@ -72,6 +72,11 @@ const router = new VueRouter({
                             name: 'imgCarousel',
                             path: 'imgCarousel',
                             component: () => import("@/pages/carousel/imgCarousel/index.vue")
+                        },
+                        {
+                            name: 'textCarousel',
+                            path: 'textCarousel',
+                            component: () => import("@/pages/carousel/textCarousel/index.vue")
                         }
                     ]
                 }
