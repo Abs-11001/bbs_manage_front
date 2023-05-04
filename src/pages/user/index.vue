@@ -83,8 +83,7 @@
             prop="register_time"></el-table-column>
         <el-table-column
             align="center"
-            label="操作"
-            prop="avatar">
+            label="操作">
           <template slot-scope="scope">
             <el-button size="mini" type="text" icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-button>
             <el-button v-if="!scope.row.locked" size="mini" type="text" class="btn-prohibit" icon="el-icon-edit" @click="handleStatus(scope.row)">禁用</el-button>
