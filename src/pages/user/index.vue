@@ -140,6 +140,12 @@
               :show-word-limit="true"
               clearable ></el-input>
         </el-form-item>
+        <el-form-item label="密码">
+          <el-input
+              v-model="individualForm.user_password"
+              show-password
+              clearable ></el-input>
+        </el-form-item>
         <el-form-item label="单位">
           <el-input
               v-model="individualForm._class"
@@ -197,6 +203,7 @@ export default {
         uuid: null,
         user_name: null,
         nick_name: null,
+        user_password: null,
         _class: null,
         introduce: null,
         avatar: null
@@ -250,6 +257,7 @@ export default {
       const data = {
         uuid: this.individualForm.uuid,
         nick_name: this.individualForm.nick_name,
+        user_password: md5(this.individualForm.user_password),
         _class: this.individualForm._class,
         introduce: this.individualForm.introduce,
       }
