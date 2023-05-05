@@ -97,7 +97,7 @@ export default {
       textCarouselDialog: false,
 
       form: {
-        idx: null,
+        nanoid: null,
         title: null,
         html: null,
         isDel: null,
@@ -164,9 +164,9 @@ export default {
     },
     confirm() {
       // 如果有idx属性，表示修改
-      if(this.form.idx) {
+      if(this.form.nanoid) {
         const data = {
-          idx: this.form.idx,
+          nanoid: this.form.nanoid,
           title: this.form.title,
           content: this.form.html,
           isDel: this.form.isDel
@@ -188,6 +188,7 @@ export default {
       } else {
         // 反之表示新增
         const data = {
+          nanoid: nanoid(),
           title: this.form.title,
           content: this.form.html.replace("<p><br></p>", '')
         }
@@ -213,7 +214,7 @@ export default {
     },
     handleStatus(row) {
       const data = {
-        idx: row.idx,
+        nanoid: row.nanoid,
         title: row.title,
         content: row.content,
         isDel: !row.del
@@ -231,7 +232,7 @@ export default {
     },
     handleEdit(row) {
       this.title = '修改数据'
-      this.form.idx = row.idx
+      this.form.nanoid = row.nanoid
       this.form.title = row.title
       this.form.html = row.content
       this.form.isDel = row.del
