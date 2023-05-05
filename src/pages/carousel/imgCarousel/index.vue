@@ -62,6 +62,7 @@
         class="addImage"
         :visible.sync="dialogVisible"
         title="添加图片轮播图资源"
+        :close-on-click-modal="false"
         :before-close="handleClose">
       <el-upload
           ref="upload"
@@ -90,6 +91,7 @@
     <el-dialog
         width="400px"
         :visible.sync="editDialogVisible"
+        :close-on-click-modal="false"
         title="修改轮播图显示顺序">
       <el-form>
         <el-form-item label="显示顺序">

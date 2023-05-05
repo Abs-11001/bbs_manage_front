@@ -30,6 +30,9 @@
           label="内容"
           align="center"
       >
+        <template slot-scope="scope">
+          <div v-html="scope.row.content"></div>
+        </template>
       </el-table-column>
       <el-table-column
           prop="addTime"
@@ -50,8 +53,10 @@
       </el-table-column>
     </el-table>
     <el-dialog
-    :visible.sync="addTextCarouselDialog"
-    title="添加文字轮播图">
+    :visible.sync="textCarouselDialog"
+    :close-on-click-modal="false"
+    :title="title">
+      <input v-model="form.title" type="text" placeholder="请输入标题...">
       <div style="border: 1px solid #ccc;">
         <Toolbar
             style="border-bottom: 1px solid #ccc"
@@ -61,7 +66,7 @@
         />
         <Editor
             style="height: 300px; overflow-y: hidden;"
-            v-model="html"
+            v-model="form.html"
             :defaultConfig="editorConfig"
             :mode="mode"
             @onCreated="onCreated"
@@ -69,8 +74,8 @@
       </div>
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="addTextCarouselDialog = false">取消</el-button>
-          <el-button type="primary" @click="confirmAdd">确认</el-button>
+          <el-button @click="textCarouselDialog = false">取消</el-button>
+          <el-button type="primary" @click="confirm">确认</el-button>
         </span>
       </template>
     </el-dialog>
@@ -81,17 +86,24 @@
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import '@wangeditor/editor/dist/css/style.css'
 import {nanoid} from "nanoid";
+import {getTextCarousel, addTextCarousel, updateTextCarousel} from "@/api/carousel";
 
 export default {
   name: "TextCarousel",
   components: { Editor, Toolbar },
   data() {
     return {
-      addTextCarouselDialog: false,
+      title: null,
+      textCarouselDialog: false,
 
+      form: {
+        idx: null,
+        title: null,
+        html: null,
+        isDel: null,
+      },
       // edit属性
       editor: null,
-      html: '<p>hello</p>',
       toolbarConfig: {},
       editorConfig: {},
       mode: 'default', // or 'simple'
@@ -129,17 +141,102 @@ export default {
         }
       }
     }
+    this.getData()
   },
   methods: {
     onCreated(editor) {
       this.editor = Object.seal(editor) // 一定要用 Object.seal() ，否则会报错
     },
+    getData() {
+      getTextCarousel().then(res => {
+        this.data = res.data
+      })
+    },
     openDialog() {
-      this.addTextCarouselDialog = true
+      this.title = '添加数据'
+      this.textCarouselDialog = true
+      this.form = {
+        idx: null,
+        title: null,
+        html: null,
+        isDel: null,
+      }
     },
-    confirmAdd() {
-
+    confirm() {
+      // 如果有idx属性，表示修改
+      if(this.form.idx) {
+        const data = {
+          idx: this.form.idx,
+          title: this.form.title,
+          content: this.form.html,
+          isDel: this.form.isDel
+        }
+        updateTextCarousel(data).then(res => {
+          const {code, msg} = res
+          if(code === 200) {
+            this.$message({
+              message: msg,
+              type: 'success'
+            })
+          }
+        }, err => {
+          this.$message({
+            message: err,
+            type: 'error'
+          })
+        })
+      } else {
+        // 反之表示新增
+        const data = {
+          title: this.form.title,
+          content: this.form.html.replace("<p><br></p>", '')
+        }
+        addTextCarousel(data).then(res => {
+          const {code, msg} = res
+          if(code === 200){
+            this.$message({
+              message: msg,
+              type: 'success'
+            })
+          }
+          this.getData()
+          this.addTextCarouselDialog = false
+        }, err => {
+          this.$message({
+            message: err,
+            type: 'error'
+          })
+        })
+      }
+      this.textCarouselDialog = false
+      this.getData()
     },
+    handleStatus(row) {
+      const data = {
+        idx: row.idx,
+        title: row.title,
+        content: row.content,
+        isDel: !row.del
+      }
+      updateTextCarousel(data).then(res => {
+        const { code, msg } = res
+        if(code === 200) {
+          this.$message({
+            message: msg,
+            type: 'success'
+          })
+        }
+        this.getData()
+      })
+    },
+    handleEdit(row) {
+      this.title = '修改数据'
+      this.form.idx = row.idx
+      this.form.title = row.title
+      this.form.html = row.content
+      this.form.isDel = row.del
+      this.textCarouselDialog = true
+    }
   },
   beforeDestroy() {
     const editor = this.editor
@@ -149,6 +246,25 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="less" scoped>
+.el-table{
+  margin-top: 10px;
+}
+.btn-prohibit{
+  color: #ff0000;
+}
+.btn-enable{
+  color: #08d708;
+}
+input{
+  width: 100%;
+  //padding: 10px 2rem;
+  margin-bottom: 5px;
+  border: none;
+  outline: none;
+  font-size: 2rem;
+  &:focus-visible{
+      border: none;
+  }
+}
 </style>
