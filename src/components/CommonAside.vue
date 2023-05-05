@@ -36,7 +36,7 @@
 
   <el-menu
       default-active="1"
-      :default-openeds="['1', '2']"
+      :default-openeds="['1', '2', '3']"
       class="el-menu-vertical-demo"
       background-color="#545c64"
       text-color="#fff"
@@ -56,7 +56,7 @@
     </el-menu-item>
     <el-submenu index="1">
       <template slot="title">
-        <i class="el-icon-s-grid"></i>
+        <i class="el-icon-message-solid"></i>
         <span>轮播管理</span>
       </template>
       <el-menu-item-group>

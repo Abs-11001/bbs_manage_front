@@ -31,7 +31,13 @@
           align="center"
       >
         <template slot-scope="scope">
-          <div v-html="scope.row.content"></div>
+          <el-popover
+              placement="top-start"
+              title="内容"
+              trigger="hover">
+            <div class="content" v-html="scope.row.content"></div>
+            <div slot="reference" v-html="subContent(scope.row.content)"></div>
+          </el-popover>
         </template>
       </el-table-column>
       <el-table-column
@@ -237,6 +243,9 @@ export default {
       this.form.html = row.content
       this.form.isDel = row.del
       this.textCarouselDialog = true
+    },
+    subContent(data) {
+      return data.substr(0, 200)
     }
   },
   beforeDestroy() {

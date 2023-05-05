@@ -43,6 +43,7 @@ import {
     Image,
     Tooltip,
     Upload,
+    Popover,
 } from "element-ui";
 import App from './App.vue'
 import router from './router'
@@ -89,6 +90,7 @@ Vue.use(Loading)
 Vue.use(Image)
 Vue.use(Tooltip)
 Vue.use(Upload)
+Vue.use(Popover)
 
 
 Vue.prototype.$confirm = MessageBox.confirm
