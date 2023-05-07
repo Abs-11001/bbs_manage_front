@@ -28,11 +28,12 @@
 
 <script>
 import {mapMutations, mapState} from 'vuex'
+import store from '../store'
 export default {
   name: "CommonHeader",
   data(){
     return {
-      userImg: require('../assets/images/user.png'),
+      userImg: 'http://file.upload.waheng.fun/' + store.state.loginAbout.avatar,
     }
   },
   computed: {

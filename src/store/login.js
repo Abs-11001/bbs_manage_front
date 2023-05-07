@@ -41,8 +41,12 @@ export default {
             state.nick_name = ''
             state.avatar = ''
             state.expire_time = ''
-            // Cookie.remove('token')
-            Cookie.clearCookie()
+            Cookie.remove('token')
+            Cookie.remove('uuid')
+            Cookie.remove('user_name')
+            Cookie.remove('nick_name')
+            Cookie.remove('avatar')
+            Cookie.remove('expire_time')
         },
         getCookie (state) {
             state.token = state.token || Cookie.get('token')

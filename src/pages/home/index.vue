@@ -15,6 +15,7 @@
       </el-card>
       <el-card shadow="hover">
         <el-table
+            height="500"
             stripe
             :data="tableData">
           <el-table-column prop="user_id" label="用户名" align="center"></el-table-column>
