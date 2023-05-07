@@ -83,7 +83,7 @@
           <ECharts :chart-data="barChartData" :is-axis="true"/>
         </el-card >
         <el-card shadow="hover"  body-style="height: 100%">
-          <ECharts :is-axis="false" :chart-data="pieChartData" />
+          <ECharts :is-axis="false" :chart-data="pieChartData"/>
         </el-card>
       </div>
     </el-col>
@@ -127,6 +127,7 @@ export default {
         legend: []
       },
       pieChartData: {
+        title: null,
         series: []
       }
     }
@@ -199,8 +200,43 @@ export default {
       getDashboard().then(res => {
         const {code, data} = res
         if(code === 200) {
+          // 数量板块
           this.count = {...data}
-          this.tableData = data.loginRecord
+          // 用户登录记录表格
+          this.tableData = data['loginRecord']
+          // 近七天用户登录次数折线图
+          const seriesData = data['lastWeekLoginList'].map(item => item['loginCount'])
+          this.lineChartData.series = {
+            data: seriesData,
+            type: 'line',
+            name: '论坛近七天登录次数'
+          }
+          this.lineChartData.xData = data['lastWeekLoginList'].map(item => item['loginTime'])
+          this.lineChartData.legend.push('论坛近七天登录次数')
+          // 文章类别占比
+          const pieChartSeries = [
+            {
+              type: 'pie',
+              data: [
+                {
+                  name: '信息共享',
+                  value: this.count.informationShareCount
+                },
+                {
+                  name: '互帮互助',
+                  value: this.count.helpEachOtherCount
+                },
+                {
+                  name: '暨阳树洞',
+                  value: this.count.treeHoleCount
+                }
+              ]
+            }
+          ]
+          this.pieChartData = {
+            title: '文章分布',
+            series: pieChartSeries
+          }
         }
       })
     }

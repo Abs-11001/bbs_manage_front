@@ -15,6 +15,7 @@ export default {
       type: Object,
       default () {
         return {
+          title: null,
           series: [],
           xData: [],
           legend: []
@@ -38,6 +39,10 @@ export default {
         },
       },
       pieOptions: {
+        title: {
+          text: null,
+          left: 'center'
+        },
         tooltip: {
           trigger: 'item'
         },
@@ -64,6 +69,7 @@ export default {
         this.hasAxisOptions.series = this.chartData.series
         this.hasAxisOptions.legend.data = this.chartData.legend
       } else {
+        this.pieOptions.title.text = this.chartData.title
         this.pieOptions.series = this.chartData.series
       }
     }
