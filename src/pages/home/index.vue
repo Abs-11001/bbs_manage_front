@@ -15,23 +15,62 @@
       </el-card>
       <el-card shadow="hover">
         <el-table
-          :data="tableData">
-          <el-table-column
-              v-for="(key, value, index) in tableHeader"
-              :key="index"
-              :prop="value"
-              :label="key"
-          ></el-table-column>
+            stripe
+            :data="tableData">
+          <el-table-column prop="user_id" label="用户名" align="center"></el-table-column>
+          <el-table-column prop="nick_name" label="昵称" align="center"></el-table-column>
+          <el-table-column prop="roleId" label="身份" width="90" align="center">
+            <template slot-scope="scope">
+              <el-tag v-if="scope.row.roleId === '用户'">{{ scope.row.roleId }}</el-tag>
+              <el-tag v-else type="success">{{ scope.row.roleId }}</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column prop="login_time" label="登录时间" width="170" align="center"></el-table-column>
         </el-table>
       </el-card>
     </el-col>
     <el-col :span="16" class="right">
       <div class="num">
-        <el-card v-for="i in countData" :key="i.name" :body-style="{display: 'flex',padding: 0}" shadow="hover">
-          <i class="icon" :class="`el-icon-${i.icon}`" :style="{backgroundColor: i.color}"></i>
+        <el-card :body-style="{display: 'flex',padding: 0}" shadow="hover">
+          <i class="icon el-icon-picture" style="background-color: #25CCF7"></i>
           <div class="detail">
-            <p class="num">¥{{i.value}}</p>
-            <p class="introduction">{{i.name}}</p>
+            <p class="num">{{ count.imageCarouselCount }}</p>
+            <p class="introduction">轮播图</p>
+          </div>
+        </el-card>
+        <el-card :body-style="{display: 'flex',padding: 0}" shadow="hover">
+          <i class="icon el-icon-message-solid" style="background-color: #EAB543"></i>
+          <div class="detail">
+            <p class="num">{{ count.textCarouselCount }}</p>
+            <p class="introduction">系统通知</p>
+          </div>
+        </el-card>
+        <el-card :body-style="{display: 'flex',padding: 0}" shadow="hover">
+          <i class="icon el-icon-s-grid" style="background-color: #55E6C1"></i>
+          <div class="detail">
+            <p class="num">{{ count.announcementCount }}</p>
+            <p class="introduction">官网通知</p>
+          </div>
+        </el-card>
+        <el-card :body-style="{display: 'flex',padding: 0}" shadow="hover">
+          <i class="icon el-icon-s-promotion" style="background-color: #D6A2E8"></i>
+          <div class="detail">
+            <p class="num">{{ count.informationShareCount }}</p>
+            <p class="introduction">信息共享</p>
+          </div>
+        </el-card>
+        <el-card :body-style="{display: 'flex',padding: 0}" shadow="hover">
+          <i class="icon el-icon-success" style="background-color: #F97F51"></i>
+          <div class="detail">
+            <p class="num">{{ count.helpEachOtherCount }}</p>
+            <p class="introduction">互帮互助</p>
+          </div>
+        </el-card>
+        <el-card :body-style="{display: 'flex',padding: 0}" shadow="hover">
+          <i class="icon el-icon-s-home" style="background-color: #2ec7c9"></i>
+          <div class="detail">
+            <p class="num">{{ count.treeHoleCount }}</p>
+            <p class="introduction">暨阳树洞</p>
           </div>
         </el-card>
       </div>
@@ -51,9 +90,9 @@
 </template>
 
 <script>
-// import {getData} from "@/api/data";
 import ECharts from '../../components/ECharts'
 import store from '../../store'
+import {getDashboard} from "@/api/dashboard";
 
 
 export default {
@@ -67,51 +106,15 @@ export default {
       userImg: 'http://file.upload.waheng.fun/' + store.state.loginAbout.avatar,
       userName: store.state.loginAbout.nick_name,
       expireTime: store.state.loginAbout.expire_time,
-      tableHeader: {
-        name: '名称',
-        todayBuy: '日销量',
-        monthBuy: '月销量',
-        totalBuy: '总销量'
-      },
       tableData: [],
-      countData: [
-        {
-          name: "今日支付订单",
-          value: 1234,
-          icon: "success",
-          color: "#2ec7c9",
-        },
-        {
-          name: "今日收藏订单",
-          value: 210,
-          icon: "star-on",
-          color: "#ffb980",
-        },
-        {
-          name: "今日未支付订单",
-          value: 1234,
-          icon: "s-goods",
-          color: "#5ab1ef",
-        },
-        {
-          name: "本月支付订单",
-          value: 1234,
-          icon: "success",
-          color: "#2ec7c9",
-        },
-        {
-          name: "本月收藏订单",
-          value: 210,
-          icon: "star-on",
-          color: "#ffb980",
-        },
-        {
-          name: "本月未支付订单",
-          value: 1234,
-          icon: "s-goods",
-          color: "#5ab1ef",
-        },
-      ],
+      count: {
+        imageCarouselCount: null,
+        textCarouselCount: null,
+        announcementCount: null,
+        informationShareCount: null,
+        helpEachOtherCount: null,
+        treeHoleCount: null,
+      },
       lineChartData: {
         series: [],
         xData: [],
@@ -138,6 +141,7 @@ export default {
     }
   },
   mounted(){
+    this.getData()
       // getData().then( res => {
       //   const {code, data} = res.data
       //   if (code === 20000){
@@ -188,6 +192,17 @@ export default {
       //     this.pieChartData.series = pieChartSeries
       //   }
       // })
+  },
+  methods: {
+    getData() {
+      getDashboard().then(res => {
+        const {code, data} = res
+        if(code === 200) {
+          this.count = {...data}
+          this.tableData = data.loginRecord
+        }
+      })
+    }
   }
 }
 </script>
