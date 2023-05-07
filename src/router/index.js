@@ -97,43 +97,23 @@ VueRouter.prototype.push = function push (to) {
     return VueRouterPush.call(this, to).catch(err => err)
 }
 
-// router.beforeEach((to, from, next) => {
-//     console.log(to)
-//     store.commit('loginAbout/getCookie')
-//
-//     // 无语了，原来可以在vue事例创建的时候把动态路由创建好,以后就不用操心路由的事情了
-//
-//     // console.log(to, from)
-//     // if (store.state.asideAbout.menu.length === 0) {
-//     //     // 防止route重复添加
-//     //     store.commit('asideAbout/addRouter', router)
-//     // }
-//     const token = store.state.loginAbout.token
-//     /// 除了判断token是否存在以外， 还需要判断当前的界面是不是login，不然哪怕login界面也会一直检测token存不存在，直接内存爆炸
-//     // if (!token && to.name !== 'login') {
-//     //     next({name: 'login'})
-//     // } else if (token && to.name === 'login') {
-//     //     next({name: 'home'})
-//     // }else if (token && to.name !== 'login'){
-//     //     // 刷新的复杂机制，第一次不会丢失route中的name，第二次丢失route中的name，所以需要判断route中是否存在name，如果没有就用path进行跳转
-//     //     if (to.name) {
-//     //         next()
-//     //         // console.log('name存在',  to.name)
-//     //     }else{
-//     //         next({path: to.path})
-//     //         // console.log('name不存在',  to.name)
-//     //     }
-//     // }else {
-//     //     next()
-//     // }
-//
-//     // if (!token && to.name !== 'login') {
-//     //     next({name: 'login'})
-//     // } else if (token && to.name === 'login') {
-//     //     next({name: 'home'})
-//     // }else {
-//     //     next()
-//     // }
-// })
+router.beforeEach((to, from, next) => {
+    store.commit('loginAbout/getCookie')
+
+    if (store.state.asideAbout.menu.length === 0) {
+        // 防止route重复添加
+        store.commit('asideAbout/addRouter', router)
+    }
+
+    const token = store.state.loginAbout.token
+
+    if (!token && to.name !== 'login') {
+        next({name: 'login'})
+    } else if (token && to.name === 'login') {
+        next({name: 'home'})
+    }else {
+        next()
+    }
+})
 
 export default router

@@ -25,7 +25,8 @@
 </template>
 
 <script>
-// import { getMenu } from "@/api/data";
+import { adminLogin } from "@/api/user";
+import md5 from "js-md5";
 
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
@@ -33,8 +34,8 @@ export default {
   data () {
     return {
       loginForm: {
-        username: 'admin',
-        password: 'admin'
+        username: '123',
+        password: '123'
       },
       rules: {
         username: [
@@ -49,22 +50,26 @@ export default {
   },
   methods: {
     handleLogin () {
-      console.log(1)
-      this.$router.push({name: 'main'})
-      this.$store.commit('loginAbout/setCookie', 'token')
-      // getMenu(this.loginForm).then(res => {
-      //   const {data} = res
-      //   if (data.code === 20000) {
-      //     const { token, menu } = data.data
-      //     this.$store.commit('loginAbout/setCookie', token)
-      //     this.$store.commit('asideAbout/setMenu', menu)
-      //     this.$store.commit('asideAbout/addRouter', this.$router)
-      //     this.$router.push({name: 'home'})
-      //   } else {
-      //     this.$message('账号密码错误，请重试~')
-      //   }
-      //
-      // })
+      const data = {
+        userName: this.loginForm.username,
+        passwordMd5: md5(this.loginForm.password)
+      }
+      adminLogin(data).then(res => {
+        const { code, msg, data } = res
+        if(code === 200) {
+          this.$store.commit('loginAbout/setCookie', data.token)
+          this.$store.commit('loginAbout/setUuid', data.uuid)
+          this.$store.commit('loginAbout/setAvatar', data.avatar)
+          this.$store.commit('loginAbout/setNickName', data.nick_name)
+          this.$store.commit('loginAbout/setUserName', data.user_name)
+          this.$store.commit('loginAbout/setExpireTime', data.expire_time)
+          this.$router.push({name: 'main'})
+        }else {
+          this.$message.error(msg)
+        }
+      }, err => {
+        this.$message.error('账号密码错误，请重试~')
+      })
     }
   }
 }

@@ -5,13 +5,12 @@
         <div class="user">
           <img :src="userImg" alt="用户头像" class="userImg">
           <div class="userInfo">
-            <h2 class="userName">Admin</h2>
+            <h2 class="userName">{{userName}}</h2>
             <h5 class="userPermission">超级管理员</h5>
           </div>
         </div>
         <div class="loginInfo">
-          <p class="info">上次登陆时间: <span>2022-07-27</span></p>
-          <p class="info">上次登陆地点: <span>河南</span></p>
+          <p class="info">上次登陆时间: <span>{{ getLastDay }}</span></p>
         </div>
       </el-card>
       <el-card shadow="hover">
@@ -54,6 +53,8 @@
 <script>
 // import {getData} from "@/api/data";
 import ECharts from '../../components/ECharts'
+import store from '../../store'
+
 
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
@@ -63,7 +64,9 @@ export default {
   },
   data(){
     return {
-      userImg: require('../../assets/images/user.png'),
+      userImg: 'http://file.upload.waheng.fun/' + store.state.loginAbout.avatar,
+      userName: store.state.loginAbout.nick_name,
+      expireTime: store.state.loginAbout.expire_time,
       tableHeader: {
         name: '名称',
         todayBuy: '日销量',
@@ -122,6 +125,16 @@ export default {
       pieChartData: {
         series: []
       }
+    }
+  },
+  computed: {
+    getLastDay() {
+      const  dd =  new  Date(this.expireTime);
+      dd.setDate(dd.getDate() - 2); //获取AddDayCount天后的日期
+      const  y = dd.getFullYear();
+      const  m = (dd.getMonth()+1) < 10 ? "0" + (dd.getMonth() + 1) : (dd.getMonth() + 1); //获取当前月份的日期，不足10补0
+      const  d = dd.getDate() < 10 ? "0" + dd.getDate() : dd.getDate(); //获取当前几号，不足10补0
+      return  y + "-" + m + "-" + d;
     }
   },
   mounted(){

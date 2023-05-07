@@ -1,9 +1,9 @@
 import request from "@/utils/request";
 
 // 用户登录接口
-export function userLogin(data) {
+export function adminLogin(data) {
     return request({
-        url: '/bbs/user/login',
+        url: '/bbs/admin/login',
         method: 'post',
         data: data
     })
@@ -12,7 +12,7 @@ export function userLogin(data) {
 // 判断用户token是否合理
 export function checkToken(data) {
     return request({
-        url: '/bbs/user/checkToken',
+        url: '/bbs/admin/checkToken',
         method: 'post',
         data: data
     })
@@ -28,9 +28,9 @@ export function userRegister(data) {
 }
 
 // 用户退出接口
-export function userLogout(data) {
+export function adminLogout(data) {
     return request({
-        url: '/bbs/user/logout',
+        url: '/bbs/admin/logout',
         method: 'post',
         data: data
     })
