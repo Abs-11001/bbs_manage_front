@@ -26,7 +26,7 @@
               <el-tag v-else type="success">{{ scope.row.roleId }}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column prop="login_time" label="登录时间" width="170" align="center"></el-table-column>
+          <el-table-column prop="login_time" label="登录时间" width="170" align="center" :show-overflow-tooltip="true"></el-table-column>
         </el-table>
       </el-card>
     </el-col>
@@ -80,7 +80,7 @@
       </el-card>
       <div class="graph">
         <el-card shadow="hover"  body-style="height: 100%">
-          <ECharts :chart-data="barChartData" :is-axis="true"/>
+          <ECharts :chart-data="barChartData" :is-bar="true"/>
         </el-card >
         <el-card shadow="hover"  body-style="height: 100%">
           <ECharts :is-axis="false" :chart-data="pieChartData"/>
@@ -122,9 +122,8 @@ export default {
         legend: []
       },
       barChartData: {
-        series: [],
-        xData: [],
-        legend: []
+        dataset: null,
+        series: null
       },
       pieChartData: {
         title: null,
@@ -209,10 +208,10 @@ export default {
           this.lineChartData.series = {
             data: seriesData,
             type: 'line',
-            name: '论坛近七天登录次数'
+            name: '论坛近七天登录总次数'
           }
           this.lineChartData.xData = data['lastWeekLoginList'].map(item => item['loginTime'])
-          this.lineChartData.legend.push('论坛近七天登录次数')
+          this.lineChartData.legend.push('论坛近七天登录总次数')
           // 文章类别占比
           const pieChartSeries = [
             {
@@ -234,9 +233,24 @@ export default {
             }
           ]
           this.pieChartData = {
-            title: '文章分布',
+            title: '文章类别分布',
             series: pieChartSeries
           }
+
+          // 近三天文章增长情况
+          const {articleCountWithDay} = data
+          const dataSet = [
+              ['日期', '信息共享', '互帮互助', '暨阳树洞'],
+              ['前天', ...articleCountWithDay[0]['count']],
+              ['昨天', ...articleCountWithDay[1]['count']],
+              ['今天', ...articleCountWithDay[2]['count']],
+          ]
+          this.barChartData.dataset = dataSet
+          this.barChartData.series = [
+            {type: 'bar'},
+            {type: 'bar'},
+            {type: 'bar'},
+          ]
         }
       })
     }
@@ -277,6 +291,9 @@ export default {
           margin-left: 50px;
         }
       }
+    }
+    .el-table{
+      overflow-x: scroll;
     }
   }
   .right{

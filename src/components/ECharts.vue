@@ -9,7 +9,11 @@ export default {
   props: {
     isAxis: {
       type: Boolean,
-      default: true
+      default: false
+    },
+    isBar: {
+      type: Boolean,
+      default: false
     },
     chartData: {
       type: Object,
@@ -18,7 +22,8 @@ export default {
           title: null,
           series: [],
           xData: [],
-          legend: []
+          legend: [],
+          dataset: {},
         }
       }
     }
@@ -47,6 +52,15 @@ export default {
           trigger: 'item'
         },
         series: []
+      },
+      barOptions: {
+        dataset: {
+          source: []
+        },
+        xAxis: {type: 'category'},
+        yAxis: {},
+        series: [],
+        tooltip: {},
       }
     }
   },
@@ -68,15 +82,22 @@ export default {
         this.hasAxisOptions.xAxis.data = this.chartData.xData
         this.hasAxisOptions.series = this.chartData.series
         this.hasAxisOptions.legend.data = this.chartData.legend
-      } else {
+      } else if (!this.isBar) {
         this.pieOptions.title.text = this.chartData.title
         this.pieOptions.series = this.chartData.series
+      } else if(this.isBar) {
+        this.barOptions.dataset.source = this.chartData.dataset
+        this.barOptions.series = this.chartData.series
       }
     }
   },
   computed: {
     options () {
-      return this.isAxis ? this.hasAxisOptions : this.pieOptions
+      if(this.isAxis) return this.hasAxisOptions
+      else {
+        if(this.isBar) return this.barOptions
+        else return this.pieOptions
+      }
     }
   }
 }
