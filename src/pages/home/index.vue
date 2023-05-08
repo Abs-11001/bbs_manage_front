@@ -123,7 +123,8 @@ export default {
       },
       barChartData: {
         dataset: null,
-        series: null
+        series: null,
+        legend: null
       },
       pieChartData: {
         title: null,
@@ -251,6 +252,7 @@ export default {
             {type: 'bar'},
             {type: 'bar'},
           ]
+          this.barChartData.legend = ['信息共享', '互帮互助', '暨阳树洞']
         }
       })
     }

@@ -61,6 +61,9 @@ export default {
         yAxis: {},
         series: [],
         tooltip: {},
+        legend: {
+          data: null
+        }
       }
     }
   },
@@ -88,6 +91,7 @@ export default {
       } else if(this.isBar) {
         this.barOptions.dataset.source = this.chartData.dataset
         this.barOptions.series = this.chartData.series
+        this.barOptions.legend.data = this.chartData.legend
       }
     }
   },
